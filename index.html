@@ -28,7 +28,13 @@
         <fieldset>
           <input type="button" data-action="clear" value="Clear Everything"></input>
           <input type="button" data-action="export" value="Export database"></input>
-          <p><label>Import from <input type="file" id="import" /></label></p>
+          <p><label>Import <input type="file" id="import" /></label></p>
+        </fieldset>
+        <fieldset class="addURL">
+          <legend>Add URL</legend>
+          <p><label for="baseURL">URL</label><input type="text" name="baseURL" /></p>
+          <p><label for="matchURL">Pattern</label><input type="text" name="matchURL" /></p>
+          <input type="button" data-action="spider" value="Add" />
         </fieldset>
       </div>
       <ul id="list">

@@ -301,6 +301,7 @@ window.addEventListener('load', function () {
       if (keys.length === 0) {
         // If database is empty, display controls
         UI.controls.classList.remove('hidden');
+        UI.list.classList.add('hidden');
       } else {
         UI.list.innerHTML = '';
         keys.sort(function (a, b) {return val[a].toLowerCase() < val[b].toLowerCase() ? -1 : 1; });
@@ -336,7 +337,7 @@ window.addEventListener('load', function () {
   }
   // Event Listeners {{
   document.addEventListener('click', function (ev) {
-    //jshint maxcomplexity: 12
+    //jshint maxcomplexity: 13
     var target;
     if (ev.target.dataset) {
       // start spider {{
@@ -373,8 +374,19 @@ window.addEventListener('load', function () {
         case "export":
           exportDatabase();
           break;
+        case "spider":
+          (function () {
+            var base  = document.querySelector("[name=baseURL]").value,
+                match = document.querySelector("[name=matchURL]").value;
+            if (match === '') {
+              match = base;
+            }
+            spider(base, match);
+          }());
+          break;
         case "toggle":
           UI.controls.classList.toggle('hidden');
+          UI.list.classList.toggle('hidden');
           break;
         }
       }

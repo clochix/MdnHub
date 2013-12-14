@@ -7,18 +7,20 @@
   max-height: 90vh;
   overflow-x: hidden;
   overflow-y: auto;
-  border-radius: 5px;
+  border-radius: .33rem;
   box-shadow: 0 0 5px rgba(127, 127, 127, .5);
   font-size: 1rem;
   font-weight: bold;
   color: white;
   background-color: #A00;
-  padding: 15px;
+  padding: .5rem;
 }
 #list {
   list-style: none;
   padding: 0;
+  font-size: .9rem;
   font-family: monospace;
+  overflow: hidden;
 }
 #list li {
   cursor: pointer;
@@ -32,15 +34,15 @@
   margin: 0 5% 0 35%;
 }
 fieldset {
-  margin: 10px 0;
+  margin: .66rem 0;
   border: 1px solid #888;
 }
-input {
+input[type=button], input[type=text] {
   border: 1px solid #CCC;
   border-radius: 2px;
   padding: 0.33rem;
 }
-#controls input {
+#controls input[type=button] {
   display: block;
   width: 100%;
   margin: 0.5rem auto;
@@ -50,10 +52,27 @@ input {
   box-shadow: 1px 1px 1px #000;
 }
 #search {
-  width: 85%;
-  margin-right: 10px;
+  width: calc(100% - 3.5rem);
+  margin-right: .5rem;
 }
 #toggle {
-  padding: 10px;
+  padding: .66rem;
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACCUlEQVRIib3VTUuVQRQH8J8IlS/c4hIUahZYto5oYyspKyJqUX6N0DbZOgtzE0hS0AsWLWrTO36DalW2iSzoPbvWIiIQl7WYuTk9Ps/1ZtAfBmbmnPOf8zJzhvrQgO/4FkelTru60YnpZP0B65ZLdgyHM3t7cSdZT6I3o9OPwaXIT2AKz3EJLdiEazid6J3BhBBZK65Em2cYquX5U5TRhHF8xgxG0Z3obsW5KP8Y503Rdqookj14geZkb0c0LMJq9CTrFrxEX5HBWZyvQbgULgvRFqJFSMn2HFkJu+Io5ch34q3aEevC+4xSg1CfL7iH+3E+GGWpA7Noz5I2RuIDuImTGfkAHqIt2WvHYxzN6I7hKvZHzkaYx2vcjuSdicGaIq/QESNJ09WFU7gbOedhLse4ij4hLUV4INSkCHP/5YCvFlI0LIRZxb+k6E3kBuujtzcwkiHKK3IbHskv8gR2K2iGm4V3kL7m6jWtWLimlXhw9ppW5Ef7G61Cf9mWIysJHbRX/kPrwbuMc4tw3eJ38DcYFVKUi348wYqMV6tqEGab3Uqhmx7JUx6IwrLQky4I9fgUPduS6Hb7s12PC6kpC3/CQJFHQ8KfMB0PaMZGIXXDid6I0BI2CHW7KLT6KRyvETFCEzuY2duHW8l60uIHdkgdX2YROvAqWc9g7XLJ8tCAH/gZx2y9hr8A5k508UtQeB0AAAAASUVORK5CYII=") no-repeat center center;
+}
+#import {
+  border-width: 0;
+  box-shadow: none;
+  display: inline;
+  width: auto;
+}
+.addURL input[type=text] {
+  margin-left: 1rem;
+  width: calc(100% - 6rem);
+}
+.addURL label {
+  display: block;
+  float: left;
+  font-weight: normal;
+  padding: 0.33rem 0;
+  width: 3rem;
 }
