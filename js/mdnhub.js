@@ -222,23 +222,23 @@ function spider(url, match, cb) {
 
 /**
  * Exports full database as a JSON file
+ * @params {String} limit if set, limit export to urls containing this string
  */
-function exportDatabase() {
+function exportDatabase(limit) {
   "use strict";
+  var filter;
+  if (limit) {
+    filter = function (val, key) { return key.indexOf(limit) !== -1 ? val : false; };
+  }
   asyncStorage.getAll(function (val) {
-    var keys = Object.keys(val),
-        blob, a;
-    // Add key to the exported object
-    keys.forEach(function (key) {
-      val[key].key = key;
-    });
+    var blob, a;
     blob = new Blob([JSON.stringify(val)], {type: "application/json"});
     a = document.createElement('a');
     a.download    = "backup.json";
     a.href        = window.URL.createObjectURL(blob);
     a.textContent = "Download backup.json";
     a.dispatchEvent(new window.MouseEvent('click', { 'view': window, 'bubbles': true, 'cancelable': true }));
-  });
+  }, filter);
 }
 
 window.addEventListener('load', function () {
