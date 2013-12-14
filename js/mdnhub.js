@@ -235,6 +235,10 @@ window.addEventListener('load', function () {
     js: {
       url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference",
       match: "JavaScript/Reference/"
+    },
+    webapi: {
+      url: "https://developer.mozilla.org/en-US/docs/Web/API",
+      match: "Web/API"
     }
   };
 
@@ -279,9 +283,11 @@ window.addEventListener('load', function () {
     UI.controls.classList.toggle('hidden');
   });
   UI.clear.addEventListener('click', function (ev) {
-    asyncStorage.clear(function () {
-      initList();
-    });
+    if (window.confirm("Do You REALLY want to ERASE THE WHOLE DATABASE ???")) {
+      asyncStorage.clear(function () {
+        initList();
+      });
+    }
   });
   UI.search.addEventListener("keyup", filterList, false);
   UI.search.addEventListener("change", filterList);
