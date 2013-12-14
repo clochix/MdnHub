@@ -241,6 +241,32 @@ function exportDatabase(limit) {
   }, filter);
 }
 
+/**
+ * Import database from local file
+ * @TODO handle exceptions
+ */
+function importFile(ev) {
+  "use strict";
+  var reader = new FileReader(),
+      nb = 0, i, numFiles;
+  reader.onload = function (e) {
+    var imported = JSON.parse(e.target.result),
+        toSave = Object.keys(imported).length;
+    eSaved.textContent = nb;
+    Object.keys(imported).forEach(function (key) {
+      asyncStorage.setItem(key, imported[key], function () {
+        eSaved.textContent = ++nb;
+        if (nb === toSave) {
+          window.alert("Done");
+        }
+      });
+    });
+  };
+  for (i = 0, numFiles = ev.target.files.length; i < numFiles; i++) {
+    reader.readAsText(ev.target.files[i]);
+  }
+}
+
 window.addEventListener('load', function () {
   "use strict";
   var config,
@@ -354,6 +380,7 @@ window.addEventListener('load', function () {
       }
     }
   });
+  document.getElementById('import').addEventListener('change', importFile, false);
   UI.search.addEventListener("keyup", filterList, false);
   UI.search.addEventListener("change", filterList);
   // }}
