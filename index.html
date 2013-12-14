@@ -13,17 +13,22 @@
       <style scoped id="scoped">
       </style>
       <div>
-        <input type=text id="search" />
-        <span id="toggle">&nbsp;</span>
+        <input type=text id="search" accesskey="k" />
+        <span id="toggle" data-action="toggle">&nbsp;</span>
       </div>
       <div id="controls" class="hidden">
-        <input type="button" id="clear" value="Clear Everithing"></input>
-        <input type="button" data-spider="css" value="Update CSS"></input>
-        <input type="button" data-spider="html" value="Update HTML"></input>
-        <input type="button" data-spider="js" value="Update JavaScript"></input>
-        <input type="button" data-spider="webapi" value="Update Web API"></input>
-        <div>Awaiting : <span id="queued"></span></div>
-        <div>Saved : <span id="saved"></span></div>
+        <fieldset>
+          <input type="button" data-spider="css" value="Update CSS"></input>
+          <input type="button" data-spider="html" value="Update HTML"></input>
+          <input type="button" data-spider="js" value="Update JavaScript"></input>
+          <input type="button" data-spider="webapi" value="Update Web API"></input>
+          <div>Awaiting : <span id="queued"></span></div>
+          <div>Saved : <span id="saved"></span></div>
+        </fieldset>
+        <fieldset>
+          <input type="button" data-action="clear" value="Clear Everything"></input>
+          <input type="button" data-action="export" value="Export database"></input>
+        </fieldset>
       </div>
       <ul id="list">
       </ul>

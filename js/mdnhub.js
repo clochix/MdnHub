@@ -219,6 +219,28 @@ function spider(url, match, cb) {
     }
   });
 }
+
+/**
+ * Exports full database as a JSON file
+ */
+function exportDatabase() {
+  "use strict";
+  asyncStorage.getAll(function (val) {
+    var keys = Object.keys(val),
+        blob, a;
+    // Add key to the exported object
+    keys.forEach(function (key) {
+      val[key].key = key;
+    });
+    blob = new Blob([JSON.stringify(val)], {type: "application/json"});
+    a = document.createElement('a');
+    a.download    = "backup.json";
+    a.href        = window.URL.createObjectURL(blob);
+    a.textContent = "Download backup.json";
+    a.dispatchEvent(new window.MouseEvent('click', { 'view': window, 'bubbles': true, 'cancelable': true }));
+  });
+}
+
 window.addEventListener('load', function () {
   "use strict";
   var config,
@@ -312,14 +334,24 @@ window.addEventListener('load', function () {
         displayItem(target.href);
       }
       // }}
-  UI.toggle.addEventListener('click', function (ev) {
-    UI.controls.classList.toggle('hidden');
-  });
-  UI.clear.addEventListener('click', function (ev) {
-    if (window.confirm("Do You REALLY want to ERASE THE WHOLE DATABASE ???")) {
-      asyncStorage.clear(function () {
-        initList();
-      });
+      // Other actions
+      if (ev.target.dataset.action) {
+        switch (ev.target.dataset.action) {
+        case "clear":
+          if (window.confirm("Do You REALLY want to ERASE THE WHOLE DATABASE ???")) {
+            asyncStorage.clear(function () {
+              initList();
+            });
+          }
+          break;
+        case "export":
+          exportDatabase();
+          break;
+        case "toggle":
+          UI.controls.classList.toggle('hidden');
+          break;
+        }
+      }
     }
   });
   UI.search.addEventListener("keyup", filterList, false);
