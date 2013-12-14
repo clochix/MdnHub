@@ -8,7 +8,12 @@ function $$(sel) {
 */
 var queue, queued, errors,
     nbSaved = 0, nbQueued = 0,
-    eSaved, eQueued;
+    eSaved, eQueued,
+    matchesSelector = document.documentElement.matchesSelector ||
+                      document.documentElement.webkitMatchesSelector ||
+                      document.documentElement.mozMatchesSelector ||
+                      document.documentElement.oMatchesSelector ||
+                      document.documentElement.msMatchesSelector;
 
 /**
  * Perform XHR
@@ -218,7 +223,7 @@ window.addEventListener('load', function () {
   "use strict";
   var config,
       UI = {};
-  ['list', 'result', 'search', 'toggle', 'clear', 'controls', 'scoped'].forEach(function (id) {
+  ['list', 'result', 'search', 'controls', 'scoped'].forEach(function (id) {
     UI[id] = document.getElementById(id);
   });
   eSaved  = document.getElementById('saved');
@@ -244,15 +249,23 @@ window.addEventListener('load', function () {
 
   function initList() {
     asyncStorage.getAll(function (val) {
-      UI.list.innerHTML = '';
-      Object.keys(val).sort(function (a, b) {return val[a].toLowerCase() < val[b].toLowerCase() ? -1 : 1; }).forEach(function (key) {
-        var li = document.createElement('li');
-        li.dataset.key = key;
-        li.dataset.txt = val[key].toLowerCase();
-        li.textContent = val[key];
-        UI.list.appendChild(li);
-      });
-      filterList();
+      var keys = Object.keys(val);
+      if (keys.length === 0) {
+        // If database is empty, display controls
+        UI.controls.classList.remove('hidden');
+      } else {
+        UI.list.innerHTML = '';
+        keys.sort(function (a, b) {return val[a].toLowerCase() < val[b].toLowerCase() ? -1 : 1; });
+        keys.forEach(function (key) {
+          var li = document.createElement('li');
+          li.dataset.key = key;
+          li.dataset.txt = val[key].toLowerCase();
+          li.textContent = val[key];
+          li.title       = key + ' - ' + val[key];
+          UI.list.appendChild(li);
+        });
+        filterList();
+      }
     }, function (val) { return val.title; });
   }
 
@@ -265,20 +278,40 @@ window.addEventListener('load', function () {
     }
   }
 
+  function displayItem(key) {
+    asyncStorage.getItem(key, function (val) {
+      if (val !== null) {
+        UI.result.innerHTML = val.content;
+        window.scrollTo(0, 0);
+      }
+    });
+  }
   // Event Listeners {{
   document.addEventListener('click', function (ev) {
-    if (ev.target.dataset && ev.target.dataset.spider) {
-      spider(config[ev.target.dataset.spider].url, config[ev.target.dataset.spider].match, initList);
-    }
-    if (ev.target.dataset && ev.target.dataset.key) {
-      asyncStorage.getItem(ev.target.dataset.key, function (val) {
-        if (val !== null) {
-          UI.result.innerHTML = val.content;
-          window.scrollTo(0, 0);
-        }
-      });
-    }
-  });
+    //jshint maxcomplexity: 12
+    var target;
+    if (ev.target.dataset) {
+      // start spider {{
+      if (ev.target.dataset.spider) {
+        spider(config[ev.target.dataset.spider].url, config[ev.target.dataset.spider].match, initList);
+      }
+      // }}
+      // display content {{
+      if (ev.target.dataset.key) {
+        displayItem(ev.target.dataset.key);
+      }
+      // }}
+      // Navigate inside content {{
+      if (matchesSelector.call(ev.target, "#result a")) {
+        target = ev.target;
+      } else if (matchesSelector.call(ev.target.parentNode, "#result a")) {
+        target = ev.target.parentNode;
+      }
+      if (target && document.querySelector("#list li[data-key='" + target.href + "']") !== null) {
+        ev.preventDefault();
+        displayItem(target.href);
+      }
+      // }}
   UI.toggle.addEventListener('click', function (ev) {
     UI.controls.classList.toggle('hidden');
   });
