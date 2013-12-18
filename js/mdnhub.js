@@ -7,8 +7,8 @@ function $$(sel) {
 }
 */
 var queue, queued, errors,
-    nbSaved = 0, nbQueued = 0,
-    eSaved, eQueued,
+    nbSaved = 0, nbQueued = 0, nbCurrent,
+    eSaved, eQueued, eCurrent,
     matchesSelector = document.documentElement.matchesSelector ||
                       document.documentElement.webkitMatchesSelector ||
                       document.documentElement.mozMatchesSelector ||
@@ -109,18 +109,21 @@ function cleanHtml(root, url) {
   forSel(root, 'script, style', function (e) {
     e.parentNode.removeChild(e);
   });
-  forSel(root, '* [id]', function (e) {
-    e.removeAttribute('id');
-  });
-  forSel(root, '* [class]', function (e) {
-    e.removeAttribute('class');
-  });
+  // Don't remove id and class, to allow some styling of content
+  //forSel(root, '* [id]', function (e) {
+  //  e.removeAttribute('id');
+  //});
+  //forSel(root, '* [class]', function (e) {
+  //  e.removeAttribute('class');
+  //});
   forSel(root, '* [style]', function (e) {
     e.removeAttribute('style');
   });
+  // By default, open links in new tab
   forSel(root, '* a[href]', function (e) {
     e.setAttribute('target', '_blank');
   });
+  // convert relative path in images sourec and links into absolute path
   forSel(root, '* img[src]:not([src^=http])', function (e) {
     var src = e.getAttribute('src');
     if (src.substr(0, 1) === '/') {
@@ -177,8 +180,9 @@ function addUrl(url, match, cb) {
         content.title   = res.getElementsByTagName("h1")[0].textContent;
         content.content = root.innerHTML;
         asyncStorage.setItem(url, content, function () {
-          console.log("Saved : " + url);
-          eSaved.textContent = nbSaved++;
+          //console.log("Saved : " + url);
+          eSaved.textContent   = nbSaved++;
+          eCurrent.textContent = nbCurrent++;
         });
       } catch (e) {
         console.log(e);
@@ -256,6 +260,7 @@ function importFile(ev) {
     Object.keys(imported).forEach(function (key) {
       asyncStorage.setItem(key, imported[key], function () {
         eSaved.textContent = ++nb;
+        eCurrent.textContent = ++nbCurrent;
         if (nb === toSave) {
           window.alert("Done");
         }
@@ -271,11 +276,12 @@ window.addEventListener('load', function () {
   "use strict";
   var config,
       UI = {};
-  ['list', 'result', 'search', 'controls', 'scoped'].forEach(function (id) {
+  ['list', 'result', 'resultContent', 'resultHead', 'search', 'controls', 'scoped'].forEach(function (id) {
     UI[id] = document.getElementById(id);
   });
-  eSaved  = document.getElementById('saved');
-  eQueued = document.getElementById('queued');
+  eSaved   = document.getElementById('saved');
+  eQueued  = document.getElementById('queued');
+  eCurrent = document.getElementById('current');
   config = {
     css: {
       url: "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference",
@@ -298,6 +304,8 @@ window.addEventListener('load', function () {
   function initList() {
     asyncStorage.getAll(function (val) {
       var keys = Object.keys(val);
+      nbCurrent = keys.length;
+      eCurrent.textContent = nbCurrent;
       if (keys.length === 0) {
         // If database is empty, display controls
         UI.controls.classList.remove('hidden');
@@ -314,6 +322,7 @@ window.addEventListener('load', function () {
           UI.list.appendChild(li);
         });
         filterList();
+        UI.search.focus();
       }
     }, function (val) { return val.title; });
   }
@@ -330,14 +339,18 @@ window.addEventListener('load', function () {
   function displayItem(key) {
     asyncStorage.getItem(key, function (val) {
       if (val !== null) {
-        UI.result.innerHTML = val.content;
+        UI.resultHead.dataset.key = key;
+        UI.resultHead.querySelector('.url').href = key;
+        UI.resultHead.querySelector('.url').textContent = val.title;
+        UI.resultContent.innerHTML = val.content;
+        UI.resultHead.classList.remove('hidden');
         window.scrollTo(0, 0);
       }
     });
   }
   // Event Listeners {{
   document.addEventListener('click', function (ev) {
-    //jshint maxcomplexity: 13
+    //jshint maxcomplexity: 20
     var target;
     if (ev.target.dataset) {
       // start spider {{
@@ -351,9 +364,9 @@ window.addEventListener('load', function () {
       }
       // }}
       // Navigate inside content {{
-      if (matchesSelector.call(ev.target, "#result a")) {
+      if (matchesSelector.call(ev.target, "#resultContent a")) {
         target = ev.target;
-      } else if (matchesSelector.call(ev.target.parentNode, "#result a")) {
+      } else if (matchesSelector.call(ev.target.parentNode, "#resultContent a")) {
         target = ev.target.parentNode;
       }
       if (target && document.querySelector("#list li[data-key='" + target.href + "']") !== null) {
@@ -391,8 +404,28 @@ window.addEventListener('load', function () {
         }
       }
     }
+    if (matchesSelector.call(ev.target, "#resultHead input")) {
+      switch (ev.target.name) {
+      case "delete":
+        asyncStorage.removeItem(UI.resultHead.dataset.key, function () {
+          initList();
+        });
+        break;
+      case "update":
+        asyncStorage.removeItem(UI.resultHead.dataset.key, function () {
+          spider(UI.resultHead.dataset.key, UI.resultHead.dataset.key);
+        });
+        break;
+      }
+    }
+
+
   });
   document.getElementById('import').addEventListener('change', importFile, false);
+  UI.search.addEventListener("focus", function () {
+    UI.controls.classList.add('hidden');
+    UI.list.classList.remove('hidden');
+  }, false);
   UI.search.addEventListener("keyup", filterList, false);
   UI.search.addEventListener("change", filterList);
   // }}

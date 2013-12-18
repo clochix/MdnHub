@@ -7,13 +7,14 @@
     <script defer src="js/mdnhub.js"></script>
     <script defer src="lib/asyncStorage.js"></script>
     <link rel='stylesheet' href='style/mdnhub.css' type='text/css' />
+    <link rel="icon" type="image/png" href="img/mdn.png" />
   </head>
   <body>
     <nav id="sidebar">
       <style scoped id="scoped">
       </style>
       <div>
-        <input type=text id="search" accesskey="k" />
+        <input type=text id="search" accesskey="k" placeholder="Search (accesskey = k)"/>
         <span id="toggle" data-action="toggle">&nbsp;</span>
       </div>
       <div id="controls" class="hidden">
@@ -22,8 +23,7 @@
           <input type="button" data-spider="html" value="Update HTML"></input>
           <input type="button" data-spider="js" value="Update JavaScript"></input>
           <input type="button" data-spider="webapi" value="Update Web API"></input>
-          <div>Awaiting : <span id="queued"></span></div>
-          <div>Saved : <span id="saved"></span></div>
+          <div id="progress"><span id="current">0</span>&nbsp;page in cache, <span id="saved">0</span>&nbsp;pages added, <span id="queued">0</span> pages in queue.</div>
         </fieldset>
         <fieldset>
           <input type="button" data-action="clear" value="Clear Everything"></input>
@@ -40,6 +40,22 @@
       <ul id="list">
       </ul>
     </nav>
-    <div id="result"></div>
+    <div id="result">
+      <div id="resultHead" data-key='' class="hidden">
+        This is a local version of <a href="" class="url"></a> from <em>Mozilla Developer Network</em>
+        <input type="button" name="update" value="Update" />
+        <input type="button" name="delete" value="Delete" />
+      </div>
+      <div id="resultContent">
+        <h1>Local MDN</h1>
+        <p>You first need to init your local database, either by scraping content from MDN with the Update buttons in control panel, or downloading archives. Please prefer the second one, to prevent putting MDN under heavy load. Download the following files, uncompress them and import them from the control panel.</p>
+        <ul>
+          <li><a href="data/css.json.gz">CSS</a></li>
+          <li><a href="data/html.json.gz">HTML</a></li>
+          <li><a href="data/js.json.gz">JavaScript</a></li>
+          <li><a href="data/webapi.json.gz">Web API</a></li>
+      </div>
+    </div>
+    <div><a href="https://github.com/clochix/MdnHub"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a></div>
   </body>
 </html>
