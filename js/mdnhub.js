@@ -1,11 +1,9 @@
 //jshint browser: true
 /*global asyncStorage: true */
-/*
 function $$(sel) {
   "use strict";
   return [].slice.call(document.querySelectorAll(sel));
 }
-*/
 var queue, queued, errors,
     nbSaved = 0, nbQueued = 0, nbCurrent,
     eSaved, eQueued, eCurrent,
@@ -314,14 +312,21 @@ window.addEventListener('load', function () {
         UI.list.innerHTML = '';
         keys.sort(function (a, b) {return val[a].toLowerCase() < val[b].toLowerCase() ? -1 : 1; });
         keys.forEach(function (key) {
-          var li = document.createElement('li');
+          var li = document.createElement('li'),
+              a  = document.createElement('a');
           li.dataset.key = key;
           li.dataset.txt = val[key].toLowerCase();
-          li.textContent = val[key];
-          li.title       = key + ' - ' + val[key];
+          a.dataset.key  = key;
+          a.textContent  = val[key];
+          a.title        = key + ' - ' + val[key];
+          a.href         = '#' + key;
+          li.appendChild(a);
           UI.list.appendChild(li);
         });
         filterList();
+        if (location.hash) {
+          displayItem(location.hash.substr(1));
+        }
         UI.search.focus();
       }
     }, function (val) { return val.title; });
@@ -342,9 +347,15 @@ window.addEventListener('load', function () {
         UI.resultHead.dataset.key = key;
         UI.resultHead.querySelector('.url').href = key;
         UI.resultHead.querySelector('.url').textContent = val.title;
-        UI.resultContent.innerHTML = val.content;
+        UI.resultContent.innerHTML = "<h1>" + val.title + "</h1>\n" + val.content;
         UI.resultHead.classList.remove('hidden');
         window.scrollTo(0, 0);
+        $$("#list .current").forEach(function (elmt) {
+          elmt.classList.remove('current');
+        });
+        $$("#list a[data-key='" + key + "']").forEach(function (elmt) {
+          elmt.classList.add('current');
+        });
       }
     });
   }
@@ -428,6 +439,9 @@ window.addEventListener('load', function () {
   }, false);
   UI.search.addEventListener("keyup", filterList, false);
   UI.search.addEventListener("change", filterList);
+  window.addEventListener('hashchange', function () {
+    displayItem(location.hash.substr(1));
+  });
   // }}
 
   initList();
