@@ -304,12 +304,12 @@ window.addEventListener('load', function () {
       var keys = Object.keys(val);
       nbCurrent = keys.length;
       eCurrent.textContent = nbCurrent;
+      UI.list.innerHTML = '';
       if (keys.length === 0) {
         // If database is empty, display controls
         UI.controls.classList.remove('hidden');
         UI.list.classList.add('hidden');
       } else {
-        UI.list.innerHTML = '';
         keys.sort(function (a, b) {return val[a].toLowerCase() < val[b].toLowerCase() ? -1 : 1; });
         keys.forEach(function (key) {
           var li = document.createElement('li'),
@@ -355,7 +355,9 @@ window.addEventListener('load', function () {
         });
         $$("#list a[data-key='" + key + "']").forEach(function (elmt) {
           elmt.classList.add('current');
+          elmt.scrollIntoView();
         });
+        document.title = 'MDNHub - ' + val.title;
       }
     });
   }

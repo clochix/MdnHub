@@ -14,27 +14,28 @@
       <style scoped id="scoped">
       </style>
       <div>
-        <input type=text id="search" accesskey="k" placeholder="Search (accesskey = k)"/>
+        <input type="search" id="search" accesskey="k" placeholder="Search (accesskey = k)"/>
         <span id="toggle" data-action="toggle">&nbsp;</span>
       </div>
       <div id="controls" class="hidden">
         <fieldset>
-          <input type="button" data-spider="css" value="Update CSS"></input>
-          <input type="button" data-spider="html" value="Update HTML"></input>
-          <input type="button" data-spider="js" value="Update JavaScript"></input>
-          <input type="button" data-spider="webapi" value="Update Web API"></input>
+          <legend>Update local database</legend>
+          <p><label>Import Archive <input type="file" id="import" /></label></p>
+          <input type="button" data-spider="css" value="Crawl CSS"></input>
+          <input type="button" data-spider="html" value="Crawl HTML"></input>
+          <input type="button" data-spider="js" value="Crawl JavaScript"></input>
+          <input type="button" data-spider="webapi" value="Crawl Web API"></input>
           <div id="progress"><span id="current">0</span>&nbsp;page in cache, <span id="saved">0</span>&nbsp;pages added, <span id="queued">0</span> pages in queue.</div>
+        </fieldset>
+        <fieldset class="addURL">
+          <legend>Add custom URL</legend>
+          <p><label for="baseURL">URL</label><input type="text" name="baseURL" placeholder="for example https://developer.mozilla.org/en-US/Firefox_OS/" /></p>
+          <p><label for="matchURL">Pattern</label><input type="text" name="matchURL" placeholder="for example Firefox_OS" /></p>
+          <input type="button" data-action="spider" value="Add" />
         </fieldset>
         <fieldset>
           <input type="button" data-action="clear" value="Clear Everything"></input>
           <input type="button" data-action="export" value="Export database"></input>
-          <p><label>Import <input type="file" id="import" /></label></p>
-        </fieldset>
-        <fieldset class="addURL">
-          <legend>Add URL</legend>
-          <p><label for="baseURL">URL</label><input type="text" name="baseURL" /></p>
-          <p><label for="matchURL">Pattern</label><input type="text" name="matchURL" /></p>
-          <input type="button" data-action="spider" value="Add" />
         </fieldset>
       </div>
       <ul id="list">
@@ -42,11 +43,11 @@
       </ul>
     </nav>
     <div id="result">
-      <div id="resultHead" data-key='' class="hidden">
+      <header id="resultHead" data-key='' class="hidden">
         This is a local version of <a href="" class="url"></a> from <em>Mozilla Developer Network</em>
         <input type="button" name="update" value="Update" />
         <input type="button" name="delete" value="Delete" />
-      </div>
+      </header>
       <div id="resultContent">
         <h1>Local MDN</h1>
         <p>You first need to init your local database, either by scraping content from MDN with the Update buttons in control panel, or downloading archives. Please prefer the second one, to prevent putting MDN under heavy load. Download the following files, uncompress them and import them from the control panel.</p>
@@ -56,6 +57,9 @@
           <li><a href="data/js.json.gz">JavaScript</a></li>
           <li><a href="data/webapi.json.gz">Web API</a></li>
       </div>
+      <footer id="footer">
+        This application is not in any way affiliated with Mozilla. The application is hacked-with-love by <a href="http://clochix.net" target="_blank">Clochix</a>. The source code is available under the <a href="Licenses/AGPL" target="_blank">AGPL License</a>. It also uses forked version of the <a href="https://github.com/mozilla/localforage" target="_blank">asyncStorage</a> library available under an <a href="Licenses/Apache" target="_blank">Apache license</a>. The contents are extracted from MDN and available under the <a href="https://developer.mozilla.org/en-US/docs/Project:MDN/About#Copyrights_and_licenses" target="_blank">following licenses</a>.
+      </footer>
     </div>
     <div><a href="https://github.com/clochix/MdnHub"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a></div>
   </body>

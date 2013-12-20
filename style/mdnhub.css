@@ -56,7 +56,7 @@ fieldset {
   margin: .66rem 0;
   border: 1px solid #888;
 }
-input[type=button], input[type=text] {
+input[type=button], input[type=text], input[type=search] {
   border: 1px solid #CCC;
   border-radius: 2px;
   padding: 0.33rem;
@@ -68,7 +68,8 @@ input[type=button], input[type=text] {
   padding: 0.33rem;
   font-weight: bold;
   color: #333;
-  box-shadow: 1px 1px 1px #000;
+  box-shadow: 2px 2px 5px #000;
+  background-color: #DDD;
 }
 #search {
   width: calc(100% - 3.5rem);
@@ -100,7 +101,8 @@ input[type=button], input[type=text] {
 }
 #result {
 }
-#resultHead {
+#resultHead, #footer {
+  margin: 1rem 0;
   padding: .5rem;
   border: 1px solid #888;
   border-radius: .5rem;
