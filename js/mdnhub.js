@@ -274,7 +274,7 @@ window.addEventListener('load', function () {
   "use strict";
   var config,
       UI = {};
-  ['list', 'result', 'resultContent', 'resultHead', 'search', 'controls', 'scoped'].forEach(function (id) {
+  ['list', 'result', 'resultContent', 'resultHead', 'search', 'controls', 'scoped', 'mdnsearch'].forEach(function (id) {
     UI[id] = document.getElementById(id);
   });
   eSaved   = document.getElementById('saved');
@@ -300,6 +300,7 @@ window.addEventListener('load', function () {
   };
 
   function initList() {
+    document.body.classList.add('loading');
     asyncStorage.getAll(function (val) {
       var keys = Object.keys(val);
       nbCurrent = keys.length;
@@ -328,6 +329,7 @@ window.addEventListener('load', function () {
           displayItem(location.hash.substr(1));
         }
         UI.search.focus();
+        document.body.classList.remove('loading');
       }
     }, function (val) { return val.title; });
   }
@@ -358,6 +360,10 @@ window.addEventListener('load', function () {
           elmt.scrollIntoView();
         });
         document.title = 'MDNHub - ' + val.title;
+        if (UI.search.value === '') {
+          UI.search.value = val.title;
+          filterList();
+        }
       }
     });
   }
@@ -441,6 +447,9 @@ window.addEventListener('load', function () {
   }, false);
   UI.search.addEventListener("keyup", filterList, false);
   UI.search.addEventListener("change", filterList);
+  UI.search.addEventListener("keyup", function () {
+    UI.mdnsearch.href = "https://developer.mozilla.org/en-US/search?q=" + UI.search.value;
+  });
   window.addEventListener('hashchange', function () {
     displayItem(location.hash.substr(1));
   });
