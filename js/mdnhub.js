@@ -364,6 +364,7 @@ window.addEventListener('load', function () {
           UI.search.value = val.title;
           filterList();
         }
+        location.hash = key;
       }
     });
   }
