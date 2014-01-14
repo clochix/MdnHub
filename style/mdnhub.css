@@ -139,3 +139,10 @@ body.loading #toggle img {
   padding: 1px 4px;
   text-decoration: none;
 }
+#notif {
+  background-color: yellow;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+}

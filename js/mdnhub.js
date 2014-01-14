@@ -1,5 +1,5 @@
 //jshint browser: true
-/*global asyncStorage: true */
+/*global asyncStorage: true, JSZip */
 function $$(sel) {
   "use strict";
   return [].slice.call(document.querySelectorAll(sel));
@@ -13,6 +13,20 @@ var queue, queued, errors,
                       document.documentElement.oMatchesSelector ||
                       document.documentElement.msMatchesSelector;
 
+function notify(txt, hide) {
+  "use strict";
+  var notif = document.getElementById('notif');
+  notif.innerHTML = txt;
+  notif.classList.remove('hidden');
+  if (typeof window.notifyInterval !== 'undefined') {
+    window.clearInterval(window.notifyInterval);
+  }
+  if (hide === true) {
+    window.notifyInterval = window.setTimeout(function () {
+      notif.classList.add('hidden');
+    }, 2000);
+  }
+}
 /**
  * Perform XHR
  */
@@ -243,6 +257,25 @@ function exportDatabase(limit) {
   }, filter);
 }
 
+function importContent(content) {
+  "use strict";
+  notify("Importing data");
+  if (typeof content === 'string') {
+    content = JSON.parse(content);
+  }
+  var toSave = Object.keys(content).length,
+      nb = 0;
+  eSaved.textContent = nb;
+  Object.keys(content).forEach(function (key) {
+    asyncStorage.setItem(key, content[key], function () {
+      eSaved.textContent = ++nb;
+      eCurrent.textContent = ++nbCurrent;
+      if (nb === toSave) {
+        notify("Done importing", true);
+      }
+    });
+  });
+}
 /**
  * Import database from local file
  * @TODO handle exceptions
@@ -250,24 +283,39 @@ function exportDatabase(limit) {
 function importFile(ev) {
   "use strict";
   var reader = new FileReader(),
-      nb = 0, i, numFiles;
+      i, numFiles;
   reader.onload = function (e) {
-    var imported = JSON.parse(e.target.result),
-        toSave = Object.keys(imported).length;
-    eSaved.textContent = nb;
-    Object.keys(imported).forEach(function (key) {
-      asyncStorage.setItem(key, imported[key], function () {
-        eSaved.textContent = ++nb;
-        eCurrent.textContent = ++nbCurrent;
-        if (nb === toSave) {
-          window.alert("Done");
-        }
-      });
-    });
+    importContent(e.target.result);
   };
   for (i = 0, numFiles = ev.target.files.length; i < numFiles; i++) {
     reader.readAsText(ev.target.files[i]);
   }
+}
+
+/**
+ * Load and import the full content archive
+ */
+function loadImport(url) {
+  "use strict";
+  var zip, xhr;
+
+  notify("Downloading data");
+
+  xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'arraybuffer';
+
+  xhr.onreadystatechange = function (e) {
+    if (this.readyState === 4 && this.status === 200) {
+      notify("Extracting data");
+      zip = new JSZip(this.response);
+      Object.keys(zip.files).forEach(function (filename) {
+        importContent(zip.file(filename).asText());
+      });
+    }
+  };
+
+  xhr.send();
 }
 
 window.addEventListener('load', function () {
@@ -442,6 +490,7 @@ window.addEventListener('load', function () {
 
   });
   document.getElementById('import').addEventListener('change', importFile, false);
+  document.getElementById('load').addEventListener('click', function () {loadImport("/data/full.zip"); }, false);
   UI.search.addEventListener("focus", function () {
     UI.controls.classList.add('hidden');
     UI.list.classList.remove('hidden');

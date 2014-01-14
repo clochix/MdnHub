@@ -6,6 +6,7 @@
     <title>MDNHub</title>
     <script defer src="js/mdnhub.js"></script>
     <script defer src="lib/asyncStorage.js"></script>
+    <script defer src="lib/jszip.min.js"></script>
     <link rel='stylesheet' href='style/mdnhub.css' type='text/css' />
     <link rel="icon" type="image/png" href="img/mdn.png" />
   </head>
@@ -44,6 +45,8 @@
       </ul>
     </nav>
     <div id="result">
+      <header id="notif" class="hidden">
+      </header>
       <header id="resultHead" data-key='' class="hidden">
         This is a local version of <a href="" class="url"></a> from <em>Mozilla Developer Network</em>
         <input type="button" name="update" value="Update" />
@@ -51,12 +54,17 @@
       </header>
       <div id="resultContent">
         <h1>Local MDN</h1>
-        <p>You first need to init your local database, either by scraping content from MDN with the Update buttons in control panel, or downloading archives. Please prefer the second one, to prevent putting MDN under heavy load. Download the following files, uncompress them and import them from the control panel.</p>
+        <p>It seems that the documentation database is empty. You need to load some data into it. You can do this either by dowloading content from MDN with the Update buttons in control panel, or downloading archives. Please prefer the second one, to prevent putting MDN under heavy load.</p>
+        <p><input type="button" id="load" value="Load whole database" />
+        <!--
+        <p>If you don't need the full documentation, you can download the following files, uncompress them and import them from the control panel.</p>
         <ul>
           <li><a href="data/css.json.gz">CSS</a></li>
           <li><a href="data/html.json.gz">HTML</a></li>
           <li><a href="data/js.json.gz">JavaScript</a></li>
           <li><a href="data/webapi.json.gz">Web API</a></li>
+        </ul>
+        -->
       </div>
       <footer id="footer">
         This application is not in any way affiliated with Mozilla. The application is hacked-with-love by <a href="http://clochix.net" target="_blank">Clochix</a>. The source code is available under the <a href="Licenses/AGPL" target="_blank">AGPL License</a>. It also uses forked version of the <a href="https://github.com/mozilla/localforage" target="_blank">asyncStorage</a> library available under an <a href="Licenses/Apache" target="_blank">Apache license</a>. The contents are extracted from MDN and available under the <a href="https://developer.mozilla.org/en-US/docs/Project:MDN/About#Copyrights_and_licenses" target="_blank">following licenses</a>.

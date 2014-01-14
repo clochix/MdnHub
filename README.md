@@ -30,7 +30,7 @@ It creates a local copy of sections of MDN, either by crawling the site and savi
 
 ### Legals
 
-This application is not in any way affiliated with Mozilla. The application is hacked-with-love by [Clochix](http://clochix.net). The source code is available under the AGPL License. It also uses forked version of the [asyncStorage](https://github.com/mozilla/localforage) library available under an Apache license. The contents are extracted from MDN and available under the [following licenses](https://developer.mozilla.org/en-US/docs/Project:MDN/About#Copyrights_and_licenses).
+This application is not in any way affiliated with Mozilla. The application is hacked-with-love by [Clochix](http://clochix.net). The source code is available under the AGPL License. It uses JSZip ([dual licensed under MIT and GPLv3 licenses](https://raw.github.com/Stuk/jszip/master/LICENSE.markdown)) and a forked version of the [asyncStorage](https://github.com/mozilla/localforage) library available under an Apache license. The contents are extracted from MDN and available under the [following licenses](https://developer.mozilla.org/en-US/docs/Project:MDN/About#Copyrights_and_licenses).
 
 </section>
 
@@ -62,5 +62,5 @@ Elle crée une copie locale des sections de MDN, soit en aspirant le site, soit 
 
 ### Blabah administratif
 
-Cette application n’est en rien affiliée à Mozilla. Elle est bidouillée avec amour par [Clochix](http://clochix.net), et sa recette est disponible sous la licence AGPL. Elle utilise une version modifiées de la bibliothèque [asyncStorage](https://github.com/mozilla/localforage), disponible sous la licence Apache. Les contenus extraits de MDN sont disponibles sous [ces licences](https://developer.mozilla.org/en-US/docs/Project:MDN/About#Copyrights_and_licenses).
+Cette application n’est en rien affiliée à Mozilla. Elle est bidouillée avec amour par [Clochix](http://clochix.net), et sa recette est disponible sous la licence AGPL. Elle utilise la bibliothèque JSZip (disponible [au choix sous MIT ou GPLv3](https://raw.github.com/Stuk/jszip/master/LICENSE.markdown)) et une version modifiée de la bibliothèque [asyncStorage](https://github.com/mozilla/localforage), disponible sous la licence Apache. Les contenus extraits de MDN sont disponibles sous [ces licences](https://developer.mozilla.org/en-US/docs/Project:MDN/About#Copyrights_and_licenses).
 </section>
